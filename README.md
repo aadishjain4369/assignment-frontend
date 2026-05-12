@@ -13,7 +13,7 @@ cd assignment-frontend
 
 ## Assignment context
 
-This SPA complements the **webhook backend**: users authenticate, manage **subscriptions** (source label, optional callback URL, optional inbound signing), copy **ingest keys**, view **event history**, and optionally connect to a **live feed** (SSE). Together they demonstrate an end-to-end **secure, observable** webhook workflow.
+This single-page application serves as the interactive frontend for the **webhook backend**, providing a comprehensive dashboard where users can securely log in, create and manage webhook **subscriptions** (including specifying source labels, optional callback URLs, and whether inbound request signing is required), and easily copy **ingest keys** for integration. Users can browse a detailed **event history** of received webhooks, and—for real-time visibility—connect to a **live event feed** via Server-Sent Events (SSE). The dashboard and backend together form a robust, end-to-end solution demonstrating the secure management and transparent observability of webhook workflows.
 
 ---
 
@@ -77,7 +77,7 @@ npm run preview
 ### Stack
 
 - **Vite + React + TypeScript** for fast local dev and a simple production build.
-- **Ant Design** for consistent layout, forms, tables, and modals without bespoke CSS for every control.
+- **Ant Design** for consistent layout, forms, tables, and modals.
 
 ### Structure
 
@@ -103,15 +103,3 @@ npm run preview
 This UI expects the **webhook backend** to implement auth and webhook routes documented in that repository (JWT login, subscriptions, ingest, feed, SSE). Clone and run the backend first, then point **`VITE_API_URL`** at it if not using defaults.
 
 ---
-
-## Git / publishing
-
-From this directory (after `git clone` or copying the frontend folder):
-
-```bash
-git remote add origin https://github.com/aadishjain4369/assignment-frontend.git   # skip if already set
-git branch -M main
-git push -u origin main
-```
-
-If **`origin`** already exists and points elsewhere: `git remote remove origin` then `git remote add origin …` again.
