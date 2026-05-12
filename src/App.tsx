@@ -2,9 +2,7 @@ import { ConfigProvider } from 'antd';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 
 import { AuthProvider } from './context/AuthContext';
-import { DashboardPage } from './pages/DashboardPage';
-import { LoginPage } from './pages/LoginPage';
-import { RegisterPage } from './pages/RegisterPage';
+import { DashboardPage, LoginPage, RegisterPage } from './pages';
 
 export default function App() {
   return (
