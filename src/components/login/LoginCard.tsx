@@ -1,5 +1,4 @@
 import { type FormEvent } from 'react';
-import { Link } from 'react-router-dom';
 
 export type LoginCardProps = {
   email: string;
@@ -22,7 +21,11 @@ export function LoginCard({
 }: LoginCardProps) {
   return (
     <div className="auth-card">
-      <h1>Log in</h1>
+      <h1>Login or Signup</h1>
+      <p className="muted small">
+        New here? Create your account. Already registered? Sign in with the same email and
+        password.
+      </p>
       <form onSubmit={onSubmit} className="stack">
         <label>
           Email
@@ -39,6 +42,7 @@ export function LoginCard({
           <input
             type="password"
             autoComplete="current-password"
+            minLength={8}
             value={password}
             onChange={(e) => onPasswordChange(e.target.value)}
             required
@@ -49,9 +53,7 @@ export function LoginCard({
           {loading ? '…' : 'Continue'}
         </button>
       </form>
-      <p className="muted small">
-        No account? <Link to="/register">Sign up</Link>
-      </p>
+      <p className="muted small">Password must be at least 8 characters.</p>
     </div>
   );
 }

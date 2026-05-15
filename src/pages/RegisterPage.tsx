@@ -1,5 +1,5 @@
-import { Register } from '../components/login';
+import { Navigate } from 'react-router-dom';
 
 export function RegisterPage() {
-  return <Register />;
+  return <Navigate to="/login" replace />;
 }
