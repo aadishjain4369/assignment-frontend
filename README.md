@@ -25,7 +25,7 @@ cp .env.example .env
 npm run dev
 ```
 
-> Make sure the backend is running before using the app. See the [backend repo](#) for setup instructions.
+> Make sure the backend is running before using the app. See the [backend repo](https://github.com/aadishjain4369/assignment-backend) for setup instructions.
 
 ---
 
