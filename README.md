@@ -1,89 +1,70 @@
-# Webhook dashboard — frontend
+## Webhook Dashboard — Frontend
 
-React (Vite + TypeScript) UI for the webhook backend: **auth**, **subscription management**, **event history**, and a **live ingest log** via Server-Sent Events.
+A React (Vite + TypeScript) dashboard for managing webhooks — built with Ant Design for a polished UI experience.
 
-**Repository:** [github.com/aadishjain4369/assignment-frontend](https://github.com/aadishjain4369/assignment-frontend)
+The app handles **authentication**, lets users manage **webhook subscriptions**, browse **event history**, and watch a **live ingest stream** via Server-Sent Events — all talking to a companion Node.js/Express backend.
+
+---
+
+## Getting Started
+
+**Prerequisites:** Node.js 18+
 
 ```bash
+# 1. Clone
 git clone https://github.com/aadishjain4369/assignment-frontend.git
 cd assignment-frontend
-```
 
----
-
-## How this maps to the assignment
-
-| Requirement | What we implemented |
-|-------------|---------------------|
-| Sign up / log in | **`Register`** and **`Login`** routes; forms post to **`/api/auth`**; JWT stored client-side (**`localStorage`**) and attached by **`api/client.ts`**. |
-| Subscribe | Modal collects **source** (logical label for the sender/integration) and optional **callback URL** where the backend delivers outbound webhooks; submits to the backend subscribe endpoint. |
-| List subscriptions | Dashboard **Subscriptions** card loads **`GET /api/webhooks/subscriptions`** and renders sources, keys, callback URLs, signing state. |
-| Incoming events | **Event history** panel loads paginated feed from the API; shows payload metadata and stored fields. |
-| JWT for frontend | All dashboard calls use **`Authorization: Bearer`** from stored token; unauthenticated users route to login. |
-| Real-time log | **`EventSource`** connects to backend **SSE** endpoint with token passed as a **query parameter** (browser **`EventSource`** cannot set custom headers). |
-| Dashboard UX | Ant Design **tables**, **modals** (add subscription, signing secret reveal), **actions** for cancel / signing where exposed by API. |
-
----
-
-## Requirements
-
-- **Node.js** 18+
-
----
-
-## Local setup
-
-### 1. Install
-
-```bash
+# 2. Install dependencies
 npm install
+
+# 3. (Optional) Set backend URL — defaults to http://localhost:4000
+cp .env.example .env
+
+# 4. Start dev server — available at http://localhost:5173
+npm run dev
 ```
 
-### 2. Environment
+> Make sure the backend is running before using the app. See the [backend repo](#) for setup instructions.
 
-Default API base: **`http://localhost:4000`**.
+---
+
+## What it does
+
+| Feature | Details |
+|---|---|
+| **Auth** | Register / login forms; JWT stored in `localStorage` and sent as `Authorization: Bearer` on every API call |
+| **Subscriptions** | Add a source + optional callback URL; view ingest keys, signing state, and cancel/manage from the dashboard |
+| **Event history** | Paginated feed of received webhook payloads with metadata |
+| **Live stream** | Real-time ingest log over SSE — token passed as a query param since `EventSource` doesn't support custom headers |
+
+---
+
+## Project structure
+
+```
+src/
+├── api/
+│   └── client.ts          # Shared fetch wrapper — JWT injection, error handling
+├── pages/                 # Route shells: Dashboard, Login, Register
+└── components/
+    ├── dashboard/         # Subscriptions card, event history, SSE lifecycle, modals
+    └── login/             # Shared login/register composition
+```
+
+---
+
+## Environment variables
+
+| Variable | Required | Default | Description |
+|---|---|---|---|
+| `VITE_API_URL` | No | `http://localhost:4000` | Backend origin (no trailing slash) |
+
+---
+
+## Build for production
 
 ```bash
-cp .env.example .env   # optional
+npm run build
+npm run preview
 ```
-
-| Variable | Required | Description |
-|----------|----------|-------------|
-| `VITE_API_URL` | No | Backend origin without trailing slash (e.g. `http://127.0.0.1:4000`). |
-
-### 3. Dev / build
-
-```bash
-npm run dev      # default port 5173
-npm run build && npm run preview
-```
-
-Backend **`FRONTEND_ORIGIN`** must allow this origin (default **`http://localhost:5173`**).
-
----
-
-## Using the app with the backend
-
-1. Start API + MongoDB (see backend README).
-2. **Register** or **log in** — JWT is saved for subsequent requests.
-3. **Add subscription** — source + optional callback URL; copy **ingest key** from the list for **`POST /api/webhooks/events`**.
-4. Generate test traffic with backend **`npm run simulate-webhooks`** or any HTTP client POSTing to ingest (**`scripts/README.md`** on the backend).
-5. Enable **signing** in the UI if you want HMAC verification on inbound requests; store the shown secret securely.
-6. Watch **event history** and the **live stream** when SSE is connected.
-
----
-
-## Implementation notes
-
-- **`src/pages/`** — Route shells only (**`<Dashboard />`**, login/register pages).
-- **`src/components/dashboard/`** — State, data fetching, SSE lifecycle, and split UI (**header**, subscriptions, history, modals).
-- **`src/components/login/`** — Shared login/register composition.
-- **`src/api/client.ts`** — Shared **`fetch`**, JWT injection, error handling.
-
-**Why SSE + query token:** Spec-compliant **`EventSource`** does not support **`Authorization`** headers; the backend accepts the same JWT via query string for the stream only.
-
----
-
-## Backend dependency
-
-This app expects the webhook backend’s auth, subscription, feed, ingest, and SSE routes. Clone and run that service first; override **`VITE_API_URL`** when not using **`localhost:4000`**.
